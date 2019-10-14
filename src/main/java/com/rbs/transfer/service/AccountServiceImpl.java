@@ -1,15 +1,15 @@
 package com.rbs.transfer.service;
 
-import java.math.BigDecimal;
-
+import com.rbs.transfer.domain.Account;
 import com.rbs.transfer.exception.AccountException;
+import com.rbs.transfer.repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.rbs.transfer.domain.Account;
-import com.rbs.transfer.repository.AccountRepository;
+import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -19,22 +19,21 @@ public class AccountServiceImpl implements AccountService {
 	private AccountRepository accountRepository;
 
 	public Account getAccount(String name) throws AccountException {
-		if (StringUtils.isEmpty(name)) {
-			throw new AccountException("Invalid name");
-		}
+		Optional.ofNullable(name)
+				.filter(nm -> !StringUtils.isEmpty(nm))
+				.orElseThrow(() -> new AccountException("Invalid name"));
 
 		Account account = accountRepository.get(name);
-		if (account == null) {
-			throw new AccountException("Unknown account: " + name);
-		}
+		Optional.ofNullable(account)
+				.orElseThrow(() -> new AccountException("Unknown account: " + name));
 
 		return account;
 	}
 
 	public Account createAccount(String name, BigDecimal initialBalance) throws AccountException {
-		if (StringUtils.isEmpty(name)) {
-			throw new AccountException("Account must have a name");
-		}
+		Optional.ofNullable(name)
+				.filter(nm -> !StringUtils.isEmpty(nm))
+				.orElseThrow(() -> new AccountException("Account must have a name"));
 
 		if (initialBalance == null || BigDecimal.ZERO.compareTo(initialBalance) >= 0) {
 			throw new AccountException("Initial balance must be greater or equals to zero");
@@ -52,9 +51,8 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public void authorize(Account account, BigDecimal amount) throws AccountException {
-		if (account == null) {
-			throw new AccountException("Undefined account");
-		}
+		Optional.ofNullable(account)
+				.orElseThrow(() -> new AccountException("Undefined account"));
 
 		if (amount == null || BigDecimal.ZERO.compareTo(amount) >= 0) {
 			throw new AccountException("Amount must be greater than zero");
@@ -73,10 +71,8 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public void credit(Account account, BigDecimal amount) throws AccountException {
-		if (account == null) {
-			throw new AccountException("Undefined account");
-		}
-
+		Optional.ofNullable(account)
+				.orElseThrow(() -> new AccountException("Undefined account"));
 		if (amount == null || BigDecimal.ZERO.compareTo(amount) >= 0) {
 			throw new AccountException("Amount must be greater than zero");
 		}

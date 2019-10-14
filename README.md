@@ -46,10 +46,10 @@ Content-Type: application/json
 
 ### Get information about system health, configurations, etc.
 ```
-I have not implemented yet.
+Not implemented yet.
 
 ```
 ### To view Swagger 2 API docs
 ```
-I have not implemented yet.
+Not implemented yet.
 ```
