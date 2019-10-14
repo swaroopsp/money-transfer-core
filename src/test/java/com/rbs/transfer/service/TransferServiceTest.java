@@ -45,6 +45,33 @@ public class TransferServiceTest {
 		transferService.transfer("1111", "2222",  BigDecimal.ZERO);
 	}
 
+	@Test
+	public void shouldThrowThrowExceptionWhenCreditButWithNullSource() {
+		exception.expect(TransferException.class);
+		exception.expectMessage( "Source account is not valid");
+		transferService.transfer(null, "2222",  BigDecimal.ONE);
+	}
+
+	@Test
+	public void shouldThrowThrowExceptionWhenCreditWithEmptySource() {
+		exception.expect(TransferException.class);
+		exception.expectMessage( "Source account is not valid");
+		transferService.transfer("", "2222",  BigDecimal.ONE);
+	}
+
+	@Test
+	public void shouldThrowThrowExceptionWhenCreditWithNullDestination() {
+		exception.expect(TransferException.class);
+		exception.expectMessage( "Target account is not valid");
+		transferService.transfer("1111", null,  BigDecimal.ONE);
+	}
+
+	@Test
+	public void shouldThrowThrowExceptionWhenCreditWithEmptyDestination() {
+		exception.expect(TransferException.class);
+		exception.expectMessage( "Target account is not valid");
+		transferService.transfer("1111", "",  BigDecimal.ONE);
+	}
 
 	@Test
 	public void shouldTransferMoneyFromSourceToDestinationAccount() {

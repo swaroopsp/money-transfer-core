@@ -1,15 +1,16 @@
 package com.rbs.transfer.service;
 
-import java.math.BigDecimal;
-
-import com.rbs.transfer.exception.AccountException;
-import com.rbs.transfer.exception.TransferException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.rbs.transfer.domain.Account;
 import com.rbs.transfer.domain.Transfer;
+import com.rbs.transfer.exception.AccountException;
+import com.rbs.transfer.exception.TransferException;
 import com.rbs.transfer.repository.TransferRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 public class TransferServiceImpl implements TransferService {
@@ -21,6 +22,13 @@ public class TransferServiceImpl implements TransferService {
 	private TransferRepository transferRepository;
 
 	public void transfer(String source, String target, BigDecimal amount) throws TransferException {
+		Optional.ofNullable(source)
+				.filter(src -> !StringUtils.isEmpty(src))
+				.orElseThrow(() -> new TransferException("Source account is not valid"));
+		Optional.ofNullable(target)
+				.filter(tgt -> !StringUtils.isEmpty(tgt))
+				.orElseThrow(() -> new TransferException("Target account is not valid"));
+
 		if (amount == null || BigDecimal.ZERO.compareTo(amount) >= 0) {
 			throw new TransferException("Transaction from " + source + " to " + target + " must be greater than 0");
 		}
