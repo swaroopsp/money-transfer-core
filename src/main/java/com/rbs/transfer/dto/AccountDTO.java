@@ -2,6 +2,7 @@ package com.rbs.transfer.dto;
 
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 @Setter
 @Getter
@@ -9,7 +10,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountDTO {
-
+	@NotNull
 	private String name;
+	@NotNull
 	private BigDecimal balance;
 }

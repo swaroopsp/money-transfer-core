@@ -3,12 +3,19 @@ package com.rbs.transfer.resource;
 import com.rbs.transfer.domain.Account;
 import com.rbs.transfer.dto.AccountDTO;
 import com.rbs.transfer.dto.TransferDTO;
+import com.rbs.transfer.exception.AccountException;
 import com.rbs.transfer.service.AccountService;
 import com.rbs.transfer.service.TransferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import javax.swing.text.html.Option;
+import javax.validation.constraints.NotNull;
+
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -25,6 +32,9 @@ public class AccountController {
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> getAccount(@PathVariable String name) {
 		try {
+			Optional.ofNullable(name)
+					.filter(nm -> !StringUtils.isEmpty(nm))
+					.orElseThrow(() -> new AccountException("Invalid name"));
 			Account account = accountService.getAccount(name);
 			AccountDTO dto = new AccountDTO();
 			dto.setName(account.getName());
