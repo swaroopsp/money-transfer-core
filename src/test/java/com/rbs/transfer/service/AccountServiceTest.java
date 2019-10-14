@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AccountServiceTest {
 
 	@Rule
-	private final ExpectedException exception = ExpectedException.none();
+	public final ExpectedException exception = ExpectedException.none();
 
 	@Autowired
 	private AccountService accountService;
